@@ -8,6 +8,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
 from sklearn.neighbors import KNeighborsRegressor
+import streamlit_shadcn_ui as ui
 
 # Load your dataset
 df = pd.read_csv('Dataset_modified_pom.csv')
@@ -102,14 +103,20 @@ if selected_tab == 'Today':
                 st.write(f"- **SP:** {selected_row['SP']}")
                 #st.write(f"- **MSP:** {selected_row['MSP']}")
                 st.write(f"- **Base Price:** {selected_row['Base Price']}")
+            
+            st.info("Demand Ratios:")
+            cols = st.columns(4)
+             # Assuming selected_row is a DataFrame or a dictionary containing the required values
+            with cols[0]:
+                ui.metric_card(title="Demand Ratio(MRP)", content=f"{selected_row['DR1']:.2f}", key="card1")
+            with cols[1]:
+                ui.metric_card(title="Demand Ratio(SP)", content=f"{selected_row['DR2']:.2f}",key="card2")
 
-            with st.container():
-                st.info("Demand Ratios:")
-                st.write(f"- **Demand Ratio(MRP):** {selected_row['DR1']}")
-                st.write(f"- **Demand Ratio(SP):** {selected_row['DR2']}")
-                st.write(f"- **Demand Ratio(MSP):** {selected_row['DR3']}")
-                st.write(f"- **Order Probability:** {selected_row['Probable Index for Bp']}")
-                                
+            with cols[2]:
+                ui.metric_card(title="Demand Ratio(MSP)", content=f"{selected_row['DR3']:.2f}", key="card3")
+            with cols[3]:
+                ui.metric_card(title="Order Probability", content=f"{selected_row['Probable Index for Bp']:.2f}",key="card4")
+                #ui.metric_card(title="Order Probability", content=f"{selected_row['Probable Index for Bp']:.2f}", description="+20.1% from last month", key="card4")                 
             # ------------
             # Integrate the polynomial function to find the area under the curve
             area_under_curve = abs(np.trapz(p(x_trendline), x=x_trendline)) * 100
@@ -135,25 +142,31 @@ if selected_tab == 'Today':
             #st.write(f'Totat TurnOver at Give Price: {result}')
             
             with st.container():
-                st.info("Demand Values")
-                st.write(f"- **Area Under the Curve:** {area_under_curve}")
-                st.write(f"- **75% of Turnover:** {turn_75}")
-                st.write(f"- **90% of Turnover:** {turn_90}")
-                st.write(f"- **Average Turnover:** {avg_new}")
-                st.write(f"- **Total Turnover at Given Price:** {result}")
+                st.error("Demand Values")
+                st.info(f"- **Area Under the Curve:** {area_under_curve}")
+                st.success(f"- **75% of Turnover:** {turn_75}")
+                st.info(f"- **90% of Turnover:** {turn_90}")
+                st.success(f"- **Average Turnover:** {avg_new}")
+                st.info(f"- **Total Turnover at Given Price:** {result}")
             # Display mean, median, and mode of the selected price range
+            st.info("Price Statistics:")
+            cols = st.columns(3)
+            
+
             if not filtered_price_range_df.empty:
-                
                 selected_row_mean_price = filtered_price_range_df['MRP'].mean()
                 selected_row_median_price = filtered_price_range_df['MRP'].median()
-                selected_row_mode_price = filtered_price_range_df['MRP'].mode().iloc[0]  # In case there are multiple modes
-            
-            st.write(f"Median Price: {selected_row_median_price}")
-            
-            st.write(f"Mean Price: {selected_row_mean_price}")
-            
-            st.write(f"Mode Price: {selected_row_mode_price}")
-            # Show the plot using Streamlit
+                selected_row_mode_price = filtered_price_range_df['MRP'].mode().iloc[0]
+
+                with cols[0]:
+                    ui.metric_card(title="Mean Price", content=f"${selected_row_mean_price:.2f}", key="mean_card")
+
+                with cols[1]:
+                    ui.metric_card(title="Median Price", content=f"${selected_row_median_price:.2f}", key="median_card")
+
+                with cols[2]:
+                    ui.metric_card(title="Mode Price", content=f"${selected_row_mode_price:.2f}", key="mode_card")
+                        # Show the plot using Streamlit
             st.pyplot(fig)    
 
         else:
