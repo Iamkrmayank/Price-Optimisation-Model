@@ -1,5 +1,5 @@
-streamlit_shadcn_ui
 streamlit
+streamlit_shadcn_ui
 pandas
 numpy
 matplotlib
