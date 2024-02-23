@@ -10,7 +10,7 @@ from xgboost import XGBRegressor
 from sklearn.neighbors import KNeighborsRegressor
 
 # Load your dataset
-df = pd.read_csv('/Users/kumarmayank/Downloads/Dataset_modified_pom.csv')
+df = pd.read_csv('Dataset_modified_pom.csv')
 df = df.drop(['Product Availibility index', 'City'], axis=1)
 
 # Assuming df is your DataFrame with 'Date', 'MRP', 'SP', and 'MSP' columns
@@ -53,9 +53,9 @@ if selected_tab == 'Today':
         # Display the selected date
         st.write(f"Selected Date: {selected_date_str}")
 
-        st.write(f"MSP:{float(filtered_df['MSP'].values)}")
-        st.write(f"MRP:{float(filtered_df['MRP'].values)}")
-        
+        st.info(f"MSP:{float(filtered_df['MSP'].values)}")
+        st.info(f"MRP:{float(filtered_df['MRP'].values)}")
+        st.success("Optimised Price:")
         # Price range sliders
         min_price, max_price = st.slider("Price Range", float(filtered_df['MRP'].min()), float(filtered_df['MSP'].max()), (float(filtered_df['MRP'].min()), float(filtered_df['MSP'].max())))
         
@@ -94,25 +94,37 @@ if selected_tab == 'Today':
 
             # Add legend
             ax.legend()
-            
-            st.write(f"Selected Row Dataset Values:")
-            st.write(f"MRP: {selected_row['MRP']}, SP: {selected_row['SP']}, MSP: {selected_row['MSP']}, Base Price: {selected_row['Base Price']}")
-            st.write(f"Demand Ratio(MRP): {selected_row['DR1']}, Demand Ratio(SP): {selected_row['DR2']}, Demand Ratio(MSP): {selected_row['DR3']}, Order Probablity: {selected_row['Probable Index for Bp']}")
+            # Changes
+            # Display the selected row information in separated boxes
+            with st.container():
+                st.info("Selected Row Dataset Values:")
+                #st.write(f"- **MRP:** {selected_row['MRP']}")
+                st.write(f"- **SP:** {selected_row['SP']}")
+                #st.write(f"- **MSP:** {selected_row['MSP']}")
+                st.write(f"- **Base Price:** {selected_row['Base Price']}")
 
+            with st.container():
+                st.info("Demand Ratios:")
+                st.write(f"- **Demand Ratio(MRP):** {selected_row['DR1']}")
+                st.write(f"- **Demand Ratio(SP):** {selected_row['DR2']}")
+                st.write(f"- **Demand Ratio(MSP):** {selected_row['DR3']}")
+                st.write(f"- **Order Probability:** {selected_row['Probable Index for Bp']}")
+                                
+            # ------------
             # Integrate the polynomial function to find the area under the curve
             area_under_curve = abs(np.trapz(p(x_trendline), x=x_trendline)) * 100
-            st.write(f'Area under the curve: {area_under_curve}')
+            # st.write(f'Area under the curve: {area_under_curve}')
             turn_75 = abs(0.75 * area_under_curve) 
             turn_90 = abs(0.90 * area_under_curve) 
-            st.write(f'75% of Turnover: {turn_75}')
-            st.write(f'90% of Turnover: {turn_90}')
+            #st.write(f'75% of Turnover: {turn_75}')
+            #st.write(f'90% of Turnover: {turn_90}')
             # Average Turn Over
             x2 = selected_row['MRP']
             x1 = selected_row['MSP']
             avg_new = (area_under_curve) / (x2-x1) 
             # ---------------------------------------
             
-            st.write(f'Average Turnover:{avg_new}')
+            #st.write(f'Average Turnover:{avg_new}')
              # Convert value to float
             value = float(value)
 
@@ -120,8 +132,15 @@ if selected_tab == 'Today':
             result = abs(p(value)*value)
 
             # Display the result on the screen
-            st.write(f'Totat TurnOver at Give Price: {result}')
+            #st.write(f'Totat TurnOver at Give Price: {result}')
             
+            with st.container():
+                st.info("Demand Values")
+                st.write(f"- **Area Under the Curve:** {area_under_curve}")
+                st.write(f"- **75% of Turnover:** {turn_75}")
+                st.write(f"- **90% of Turnover:** {turn_90}")
+                st.write(f"- **Average Turnover:** {avg_new}")
+                st.write(f"- **Total Turnover at Given Price:** {result}")
             # Display mean, median, and mode of the selected price range
             if not filtered_price_range_df.empty:
                 
