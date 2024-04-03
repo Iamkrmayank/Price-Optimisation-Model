@@ -159,13 +159,13 @@ if selected_tab == 'Today':
                 selected_row_mode_price = filtered_price_range_df['MRP'].mode().iloc[0]
 
                 with cols[0]:
-                    ui.metric_card(title="Mean Price", content=f"${selected_row_mean_price:.2f}", key="mean_card")
+                    ui.metric_card(title="Mean Price", content=f"₹{selected_row_mean_price:.2f}", key="mean_card")
 
                 with cols[1]:
-                    ui.metric_card(title="Median Price", content=f"${selected_row_median_price:.2f}", key="median_card")
+                    ui.metric_card(title="Median Price", content=f"₹{selected_row_median_price:.2f}", key="median_card")
 
                 with cols[2]:
-                    ui.metric_card(title="Mode Price", content=f"${selected_row_mode_price:.2f}", key="mode_card")
+                    ui.metric_card(title="Mode Price", content=f"₹{selected_row_mode_price:.2f}", key="mode_card")
                         # Show the plot using Streamlit
             st.pyplot(fig)    
 
