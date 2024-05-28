@@ -56,8 +56,8 @@ if selected_tab == 'Today':
 
         st.info(f"MSP:{float(filtered_df['MSP'].values)}")
         st.info(f"MRP:{float(filtered_df['MRP'].values)}")
-        #opt = 0.75*float(filtered_df['MRP'].values)
-        st.success(f"Optimised Price:{filtered_df['Base Price']}")
+        opt = filtered_df['Base Price'].values
+        st.success(f"Optimised Price:{opt}")
         # Price range sliders
         min_price, max_price = st.slider("Price Range", float(filtered_df['MRP'].min()), float(filtered_df['MSP'].max()), (float(filtered_df['MRP'].min()), float(filtered_df['MSP'].max())))
         
