@@ -90,8 +90,7 @@ if selected_tab == 'Today':
             ax.legend()
 
             # Display Trendline Function
-            st.write(f"Trendline function: {np.poly1d(z)}")
-
+            st.info(f"Trendline function: {np.poly1d(z)}")
             # Calculate DRs at Base Price
             base_price = float(selected_row['Base Price'])
             dr_at_base_price = p(base_price)
